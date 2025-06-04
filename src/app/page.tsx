@@ -146,7 +146,7 @@ export default function FuturisticPortfolio() {
             <div className={styles.heroImageGlow}></div>
             <div className={styles.heroImage}>
               <Image 
-                src="/profile.jpg" 
+                src="/mario.png" 
                 alt="Carlos Mario Franco"
                 width={280}
                 height={280}
