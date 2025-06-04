@@ -1,103 +1,360 @@
-import Image from "next/image";
+'use client'
+import { useState, useRef } from 'react'
+import { motion, useScroll, useTransform } from 'framer-motion'
+import { FiGithub, FiLinkedin, FiMail, FiArrowRight } from 'react-icons/fi'
+import Image from 'next/image'
+import styles from './page.module.css'
 
-export default function Home() {
+export default function FuturisticPortfolio() {
+  const [activeSection, setActiveSection] = useState('home')
+  const ref = useRef(null)
+  const { scrollYProgress } = useScroll({ target: ref })
+  const y = useTransform(scrollYProgress, [0, 1], ['0%', '2%'])
+
+  const sections = [
+    { id: 'home', label: 'Inicio' },
+    { id: 'about', label: 'Quién Soy' },
+    { id: 'projects', label: 'Proyectos' },
+    { id: 'contact', label: 'Contáctame' }
+  ]
+
+  const scrollToSection = (sectionId: string) => {
+    setActiveSection(sectionId)
+    const element = document.getElementById(sectionId)
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' })
+    }
+  }
+
+  const handleContactSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    alert('Mensaje enviado con éxito!')
+  }
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div className={styles.container}>
+      {/* Fondo futurista */}
+      <div className={styles.background}>
+        <div className={styles.gradientBg}></div>
+        <div className={styles.gridBg}></div>
+        <motion.div 
+          className={styles.noiseBg}
+          animate={{ x: [0, 100, 0], y: [0, 50, 0] }}
+          transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+        ></motion.div>
+      </div>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+      {/* Barra de navegación futurista */}
+      <nav className={styles.nav}>
+        <ul className={styles.navList}>
+          {sections.map((section) => (
+            <li key={section.id}>
+              <button
+                onClick={() => scrollToSection(section.id)}
+                className={`${styles.navButton} ${
+                  activeSection === section.id ? styles.navButtonActive : styles.navButtonInactive
+                }`}
+              >
+                {section.label}
+                {activeSection === section.id && (
+                  <motion.span
+                    layoutId="navIndicator"
+                    className={styles.navIndicator}
+                    transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
+                  />
+                )}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      {/* Contenido principal */}
+      <div className="relative z-10 container mx-auto px-4 md:px-8">
+        {/* Sección Hero */}
+        <section id="home" className={styles.hero}>
+          <div className={styles.heroContent}>
+            <motion.h1 
+              className={styles.heroTitle}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              Hi there,<br />I&apos;m <span className={styles.glowText}>Carlos Mario</span>
+            </motion.h1>
+            
+            <motion.h2
+              className={styles.heroSubtitle}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              A <span className="text-blue-400">Frontend Engineer</span> who helps<br />
+              startups <span className={`underline ${styles.hoverGlow}`}>launch and grow</span>
+            </motion.h2>
+            
+            <motion.div
+              className={styles.heroButtons}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+            >
+              <button 
+                onClick={() => scrollToSection('contact')}
+                className={styles.primaryButton}
+              >
+                Contact Me <FiArrowRight className="ml-2 transition-transform group-hover:translate-x-1" />
+              </button>
+              <button 
+                onClick={() => scrollToSection('projects')}
+                className={styles.secondaryButton}
+              >
+                View Projects
+              </button>
+            </motion.div>
+          </div>
+
+          <motion.div
+            className={styles.heroImageContainer}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+            <div className={styles.heroImageGlow}></div>
+            <div className={styles.heroImage}>
+              <Image 
+                src="/profile.jpg" 
+                alt="Carlos Mario Franco"
+                width={280}
+                height={280}
+                className="w-full h-full object-cover"
+                priority
+              />
+            </div>
+          </motion.div>
+        </section>
+
+        {/* Sección de contenido */}
+        <motion.section
+          ref={ref}
+          style={{ y }}
+          className={styles.contentSection}
+          id="content"
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          <div className="max-w-6xl mx-auto">
+            {/* Sección Home */}
+            {activeSection === 'home' && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+              >
+                <h3 className={styles.sectionTitle}>What I Do</h3>
+                <div className={styles.cardGrid}>
+                  {[
+                    {
+                      title: "UI/UX Design",
+                      description: "Creating intuitive interfaces with modern design systems that delight users and drive engagement."
+                    },
+                    {
+                      title: "Frontend Development",
+                      description: "Building performant, accessible web applications with React, Next.js, and modern JavaScript frameworks."
+                    },
+                    {
+                      title: "Technical Consulting",
+                      description: "Helping startups choose the right tech stack and architecture for scalable growth."
+                    }
+                  ].map((item, index) => (
+                    <div key={index} className={styles.card}>
+                      <h4 className={styles.cardTitle}>{item.title}</h4>
+                      <p className={styles.cardText}>{item.description}</p>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+
+            {/* Sección About */}
+            {activeSection === 'about' && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                className="space-y-8"
+              >
+                <h3 className={styles.sectionTitle}>Quién Soy</h3>
+                <div className="grid md:grid-cols-2 gap-8">
+                  <div className="space-y-6">
+                    <p className="text-gray-300 leading-relaxed">
+                      Soy un profesional apasionado por la tecnología con más de 10 años de experiencia combinada en desarrollo de software, logística y gestión de proyectos. Mi enfoque multidisciplinario me permite abordar problemas desde diferentes perspectivas y encontrar soluciones innovadoras.
+                    </p>
+                    <p className="text-gray-300 leading-relaxed">
+                      Como Frontend Engineer, me especializo en crear experiencias digitales excepcionales que combinan diseño atractivo con funcionalidad robusta. Mi objetivo es desarrollar productos que no solo cumplan con los requisitos técnicos, sino que también generen un impacto positivo en los usuarios.
+                    </p>
+                    <div className="flex space-x-6">
+                      <a href="https://github.com/Mario06franco" className="text-blue-400 hover:text-blue-300 transition-colors">
+                        <FiGithub size={24} />
+                      </a>
+                      <a href="https://linkedin.com/in/carlos-mario-franco" className="text-blue-400 hover:text-blue-300 transition-colors">
+                        <FiLinkedin size={24} />
+                      </a>
+                      <a href="mailto:contacto@carlosmario.dev" className="text-blue-400 hover:text-blue-300 transition-colors">
+                        <FiMail size={24} />
+                      </a>
+                    </div>
+                  </div>
+                  <div className={styles.card}>
+                    <h4 className={`${styles.cardTitle} mb-6`}>Habilidades Técnicas</h4>
+                    <div className="space-y-5">
+                      {[
+                        { skill: 'React / Next.js', level: 90 },
+                        { skill: 'TypeScript', level: 85 },
+                        { skill: 'UI/UX Design', level: 80 },
+                        { skill: 'Node.js', level: 75 },
+                        { skill: 'Bases de Datos', level: 70 }
+                      ].map((item, index) => (
+                        <div key={index}>
+                          <div className="flex justify-between mb-2">
+                            <span className="text-gray-300">{item.skill}</span>
+                            <span className="text-blue-400">{item.level}%</span>
+                          </div>
+                          <div className="w-full bg-gray-700 rounded-full h-2">
+                            <div 
+                              className="bg-gradient-to-r from-blue-500 to-purple-600 h-2 rounded-full" 
+                              style={{ width: `${item.level}%` }}
+                            ></div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+
+            {/* Sección Projects */}
+            {activeSection === 'projects' && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+              >
+                <h3 className={styles.sectionTitle}>Mis Proyectos</h3>
+                <div className={styles.cardGrid}>
+                  {[
+                    {
+                      title: "E-commerce Platform",
+                      description: "Plataforma completa de comercio electrónico con carrito de compras, pasarela de pago y panel de administración.",
+                      tags: ["React", "Node.js", "MongoDB", "Stripe"]
+                    },
+                    {
+                      title: "Task Management App",
+                      description: "Aplicación para gestión de tareas con arrastrar y soltar, colaboración en equipo y notificaciones en tiempo real.",
+                      tags: ["Next.js", "TypeScript", "Firebase"]
+                    },
+                    {
+                      title: "Health Tracking App",
+                      description: "Aplicación móvil para seguimiento de salud y bienestar con gráficos personalizados y recordatorios inteligentes.",
+                      tags: ["React Native", "GraphQL", "AWS"]
+                    },
+                    {
+                      title: "Portfolio Website",
+                      description: "Sitio web personalizado para artista visual con galería interactiva y sistema de gestión de contenido.",
+                      tags: ["GSAP", "Three.js", "Sanity.io"]
+                    }
+                  ].map((project, index) => (
+                    <div key={index} className={styles.card}>
+                      <h4 className={styles.cardTitle}>{project.title}</h4>
+                      <p className={styles.cardText}>{project.description}</p>
+                      <div className="flex flex-wrap gap-2 mt-4">
+                        {project.tags.map((tag, tagIndex) => (
+                          <span key={tagIndex} className="px-3 py-1 bg-gray-800/50 text-sm rounded-full text-blue-400 border border-gray-700">
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+
+            {/* Sección Contact */}
+            {activeSection === 'contact' && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+              >
+                <h3 className={styles.sectionTitle}>Contáctame</h3>
+                <div className={styles.contactGrid}>
+                  <form onSubmit={handleContactSubmit} className="space-y-6">
+                    <div className={styles.formGroup}>
+                      <label htmlFor="name" className={styles.formLabel}>Nombre</label>
+                      <input 
+                        type="text" 
+                        id="name" 
+                        required
+                        className={styles.formInput}
+                      />
+                    </div>
+                    <div className={styles.formGroup}>
+                      <label htmlFor="email" className={styles.formLabel}>Email</label>
+                      <input 
+                        type="email" 
+                        id="email" 
+                        required
+                        className={styles.formInput}
+                      />
+                    </div>
+                    <div className={styles.formGroup}>
+                      <label htmlFor="message" className={styles.formLabel}>Mensaje</label>
+                      <textarea 
+                        id="message" 
+                        rows={5}
+                        required
+                        className={`${styles.formInput} ${styles.formTextarea}`}
+                      ></textarea>
+                    </div>
+                    <button 
+                      type="submit"
+                      className={styles.submitButton}
+                    >
+                      Enviar Mensaje <FiArrowRight className="ml-2" />
+                    </button>
+                  </form>
+
+                  <div className="space-y-6">
+                    <div className={styles.contactInfo}>
+                      <h4 className={`${styles.cardTitle} mb-6`}>Información de Contacto</h4>
+                      <div className="space-y-4">
+                        <div className={styles.contactItem}>
+                          <FiMail className={styles.contactIcon} />
+                          <span>contacto@carlosmario.dev</span>
+                        </div>
+                        <div className={styles.contactItem}>
+                          <FiLinkedin className={styles.contactIcon} />
+                          <a href="https://linkedin.com/in/carlos-mario-franco" className="hover:underline">linkedin.com/in/carlosmario</a>
+                        </div>
+                        <div className={styles.contactItem}>
+                          <FiGithub className={styles.contactIcon} />
+                          <a href="https://github.com/Mario06franco" className="hover:underline">github.com/carlosmario</a>
+                        </div>
+                      </div>
+                    </div>
+                    <div className={styles.contactInfo}>
+                      <h4 className={`${styles.cardTitle} mb-6`}>Disponibilidad</h4>
+                      <p className="text-gray-300 leading-relaxed">
+                        Actualmente estoy disponible para nuevos proyectos desafiantes y oportunidades de colaboración. Si tienes un proyecto en mente o quieres discutir cómo puedo ayudar a tu equipo, no dudes en contactarme.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </div>
+        </motion.section>
+      </div>
     </div>
-  );
+  )
 }
