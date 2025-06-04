@@ -4,6 +4,7 @@ import { motion, useScroll, useTransform } from 'framer-motion'
 import { FiGithub, FiLinkedin, FiMail, FiArrowRight } from 'react-icons/fi'
 import Image from 'next/image'
 import styles from './page.module.css'
+import { supabase } from '@/app/lib/supabaseClient'; // Asegúrate de que la ruta sea correcta
 
 export default function FuturisticPortfolio() {
   const [activeSection, setActiveSection] = useState('home')
@@ -26,10 +27,32 @@ export default function FuturisticPortfolio() {
     }
   }
 
-  const handleContactSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    alert('Mensaje enviado con éxito!')
+  const handleContactSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  
+  const form = e.currentTarget as HTMLFormElement;
+  const formData = new FormData(form);
+
+  const name = formData.get('name') as string;
+  const email = formData.get('email') as string;
+  const message = formData.get('message') as string;
+
+  try {
+    const { error } = await supabase
+      .from('contact_messages')
+      .insert({ name, email, message });
+
+    if (error) {
+      throw error;
+    }
+
+    alert('¡Mensaje enviado con éxito!');
+    form.reset(); // Limpia el formulario
+  } catch (error) {
+    console.error('Error al enviar el mensaje:', error);
+    alert('Hubo un error al enviar tu mensaje. Por favor, inténtalo de nuevo.');
   }
+};
 
   return (
     <div className={styles.container}>
@@ -80,7 +103,7 @@ export default function FuturisticPortfolio() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
             >
-              Hi there,<br />I&apos;m <span className={styles.glowText}>Carlos Mario</span>
+              Hola, a Todos<br />Yo soy <span className={styles.glowText}>Carlos Mario Franco</span>
             </motion.h1>
             
             <motion.h2
@@ -89,8 +112,8 @@ export default function FuturisticPortfolio() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
-              A <span className="text-blue-400">Frontend Engineer</span> who helps<br />
-              startups <span className={`underline ${styles.hoverGlow}`}>launch and grow</span>
+              Un <span className="text-blue-400">Desarrollador Web</span> Que Ayuda<br />
+              startups <span className={`underline ${styles.hoverGlow}`}>A lanzarse y crecer</span>
             </motion.h2>
             
             <motion.div
@@ -103,13 +126,13 @@ export default function FuturisticPortfolio() {
                 onClick={() => scrollToSection('contact')}
                 className={styles.primaryButton}
               >
-                Contact Me <FiArrowRight className="ml-2 transition-transform group-hover:translate-x-1" />
+                Contactame <FiArrowRight className="ml-2 transition-transform group-hover:translate-x-1" />
               </button>
               <button 
                 onClick={() => scrollToSection('projects')}
                 className={styles.secondaryButton}
               >
-                View Projects
+                Ver Proyectos
               </button>
             </motion.div>
           </div>
@@ -289,40 +312,43 @@ export default function FuturisticPortfolio() {
                 <h3 className={styles.sectionTitle}>Contáctame</h3>
                 <div className={styles.contactGrid}>
                   <form onSubmit={handleContactSubmit} className="space-y-6">
-                    <div className={styles.formGroup}>
-                      <label htmlFor="name" className={styles.formLabel}>Nombre</label>
-                      <input 
-                        type="text" 
-                        id="name" 
-                        required
-                        className={styles.formInput}
-                      />
-                    </div>
-                    <div className={styles.formGroup}>
-                      <label htmlFor="email" className={styles.formLabel}>Email</label>
-                      <input 
-                        type="email" 
-                        id="email" 
-                        required
-                        className={styles.formInput}
-                      />
-                    </div>
-                    <div className={styles.formGroup}>
-                      <label htmlFor="message" className={styles.formLabel}>Mensaje</label>
-                      <textarea 
-                        id="message" 
-                        rows={5}
-                        required
-                        className={`${styles.formInput} ${styles.formTextarea}`}
-                      ></textarea>
-                    </div>
-                    <button 
-                      type="submit"
-                      className={styles.submitButton}
-                    >
-                      Enviar Mensaje <FiArrowRight className="ml-2" />
-                    </button>
-                  </form>
+  <div className={styles.formGroup}>
+    <label htmlFor="name" className={styles.formLabel}>Nombre</label>
+    <input 
+      type="text" 
+      id="name" 
+      name="name" // Añade esto
+      required
+      className={styles.formInput}
+    />
+  </div>
+  <div className={styles.formGroup}>
+    <label htmlFor="email" className={styles.formLabel}>Email</label>
+    <input 
+      type="email" 
+      id="email" 
+      name="email" // Añade esto
+      required
+      className={styles.formInput}
+    />
+  </div>
+  <div className={styles.formGroup}>
+    <label htmlFor="message" className={styles.formLabel}>Mensaje</label>
+    <textarea 
+      id="message" 
+      name="message" // Añade esto
+      rows={5}
+      required
+      className={`${styles.formInput} ${styles.formTextarea}`}
+    ></textarea>
+  </div>
+  <button 
+    type="submit"
+    className={styles.submitButton}
+  >
+    Enviar Mensaje <FiArrowRight className="ml-2" />
+  </button>
+</form>
 
                   <div className="space-y-6">
                     <div className={styles.contactInfo}>
