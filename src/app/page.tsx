@@ -1,7 +1,7 @@
 'use client'
 import { useState, useRef } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
-import { FiGithub, FiLinkedin, FiMail, FiArrowRight  } from 'react-icons/fi'
+import { FiGithub, FiLinkedin, FiMail, FiArrowRight } from 'react-icons/fi'
 import { FaWhatsapp } from 'react-icons/fa'
 import Image from 'next/image'
 import styles from './page.module.css'
@@ -101,7 +101,7 @@ export default function FuturisticPortfolio() {
               transition={{ duration: 0.8 }}
             >
               Hello everyone,<br />
-              I'm <span className={styles.glowText}>Carlos Mario Franco</span>
+              I&apos;m <span className={styles.glowText}>Carlos Mario Franco</span>
             </motion.h1>
             <motion.h2
               className={styles.heroSubtitle}
@@ -204,10 +204,10 @@ export default function FuturisticPortfolio() {
                 <div className="grid md:grid-cols-2 gap-8">
                   <div className="space-y-6">
                     <p className="text-gray-300 leading-relaxed">
-                      As a seasoned Software Analyst and Developer with over a decade of experience, I specialize in crafting technology solutions that bridge business needs with technical execution. My career spans software development, systems analysis, and process optimization, where I've consistently delivered systems that enhance operational workflows and drive measurable business impact.
+                      As a seasoned Software Analyst and Developer with over a decade of experience, I specialize in crafting technology solutions that bridge business needs with technical execution. My career spans software development, systems analysis, and process optimization, where I&apos;ve consistently delivered systems that enhance operational workflows and drive measurable business impact.
                     </p>
                     <p className="text-gray-300 leading-relaxed">
-                      What sets me apart is my ability to analyze complex requirements and translate them into efficient, scalable solutions. With a background that intersects software engineering and logistics, I bring a unique perspective to digital transformation projects, ensuring technical implementations align with real-world operational demands. I take pride in building systems that don't just function well but create tangible value for organizations and end-users alike.
+                      What sets me apart is my ability to analyze complex requirements and translate them into efficient, scalable solutions. With a background that intersects software engineering and logistics, I bring a unique perspective to digital transformation projects, ensuring technical implementations align with real-world operational demands. I take pride in building systems that don&apos;t just function well but create tangible value for organizations and end-users alike.
                     </p>
                     <div className="flex space-x-6">
                       <a href="https://github.com/Mario06franco" className="text-blue-400 hover:text-blue-300 transition-colors">
@@ -260,27 +260,27 @@ export default function FuturisticPortfolio() {
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5 }}
               >
-                <h3 className={styles.sectionTitle}>Mis Proyectos</h3>
+                <h3 className={styles.sectionTitle}>My Projects</h3>
                 <div className={styles.cardGrid}>
                   {[
                     {
                       title: "E-commerce Platform",
-                      description: "Plataforma completa de comercio electrónico con carrito de compras, pasarela de pago y panel de administración.",
+                      description: "Complete e-commerce platform with shopping cart, payment gateway and admin panel.",
                       tags: ["React", "Node.js", "MongoDB", "Stripe"]
                     },
                     {
                       title: "Task Management App",
-                      description: "Aplicación para gestión de tareas con arrastrar y soltar, colaboración en equipo y notificaciones en tiempo real.",
+                      description: "Task management application with drag and drop, team collaboration and real-time notifications.",
                       tags: ["Next.js", "TypeScript", "Firebase"]
                     },
                     {
                       title: "Health Tracking App",
-                      description: "Aplicación móvil para seguimiento de salud y bienestar con gráficos personalizados y recordatorios inteligentes.",
+                      description: "Mobile app for health and wellness tracking with custom charts and smart reminders.",
                       tags: ["React Native", "GraphQL", "AWS"]
                     },
                     {
                       title: "Portfolio Website",
-                      description: "Sitio web personalizado para artista visual con galería interactiva y sistema de gestión de contenido.",
+                      description: "Custom website for visual artist with interactive gallery and content management system.",
                       tags: ["GSAP", "Three.js", "Sanity.io"]
                     }
                   ].map((project, index) => (
@@ -353,11 +353,11 @@ export default function FuturisticPortfolio() {
                       <div className="space-y-4">
                         <div className={styles.contactItem}>
                           <FiMail className={styles.contactIcon} />
-                          <span>Mariofraco93@gmail.com </span>
+                          <span>Mariofraco93@gmail.com</span>
                         </div>
                         <div className={styles.contactItem}>
                           <FiLinkedin className={styles.contactIcon} />
-                          <a href="https://linkedin.com/in/carlos-mario-franco-pulgarin-004397305?" className="hover:underline">linkedin.com/in/carlosmario</a>
+                          <a href="https://linkedin.com/in/carlos-mario-franco-pulgarin-004397305" className="hover:underline">linkedin.com/in/carlosmario</a>
                         </div>
                         <div className={styles.contactItem}>                                                  
                           <FiGithub className={styles.contactIcon} />
@@ -372,7 +372,7 @@ export default function FuturisticPortfolio() {
                     <div className={styles.contactInfo}>
                       <h4 className={`${styles.cardTitle} mb-6`}>Availability</h4>
                       <p className="text-gray-300 leading-relaxed">
-                        I am currently available for challenging new projects and opportunities for collaboration. If you have a project in mind or want to discuss how I can help your team, don't hesitate to contact me.
+                        I am currently available for challenging new projects and opportunities for collaboration. If you have a project in mind or want to discuss how I can help your team, don&apos;t hesitate to contact me.
                       </p>
                     </div>
                   </div>
@@ -392,13 +392,13 @@ export default function FuturisticPortfolio() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <h3>¡Mensaje enviado con éxito!</h3>
-            <p>Gracias por contactarme. Revisaré tu mensaje y me pondré en contacto contigo lo antes posible.</p>
+            <h3>Message sent successfully!</h3>
+            <p>Thank you for contacting me. I will review your message and get back to you as soon as possible.</p>
             <button 
               className={styles.confirmButton}
               onClick={() => setSubmitStatus('idle')}
             >
-              Aceptar
+              Accept
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M5 12h14M12 5l7 7-7 7"/>
               </svg>
@@ -415,14 +415,14 @@ export default function FuturisticPortfolio() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </div>
-            <h3>Error al enviar</h3>
-            <p>Hubo un problema al enviar tu mensaje. Por favor, inténtalo de nuevo más tarde.</p>
+            <h3>Error sending</h3>
+            <p>There was a problem sending your message. Please try again later.</p>
             <button 
               className={styles.confirmButton}
               style={{ background: 'linear-gradient(135deg, #ef4444, #f97316)' }}
               onClick={() => setSubmitStatus('idle')}
             >
-              Entendido
+              Understood
             </button>
           </div>
         </div>
@@ -431,7 +431,7 @@ export default function FuturisticPortfolio() {
       {/* Footer */}
       <footer className={styles.footer}>
         <p className={styles.footerText}>
-          Creado por Mario Franco · © {new Date().getFullYear()} Todos los derechos reservados
+          Created by Mario Franco · © {new Date().getFullYear()} All rights reserved
         </p>
       </footer>
     </div>
