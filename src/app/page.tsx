@@ -1,22 +1,24 @@
 'use client'
 import { useState, useRef } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
-import { FiGithub, FiLinkedin, FiMail, FiArrowRight } from 'react-icons/fi'
+import { FiGithub, FiLinkedin, FiMail, FiArrowRight  } from 'react-icons/fi'
+import { FaWhatsapp } from 'react-icons/fa'
 import Image from 'next/image'
 import styles from './page.module.css'
-import { supabase } from '@/app/lib/supabaseClient'; // Asegúrate de que la ruta sea correcta
+import { supabase } from '@/app/lib/supabaseClient'
 
 export default function FuturisticPortfolio() {
   const [activeSection, setActiveSection] = useState('home')
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle')
   const ref = useRef(null)
   const { scrollYProgress } = useScroll({ target: ref })
   const y = useTransform(scrollYProgress, [0, 1], ['0%', '2%'])
 
   const sections = [
-    { id: 'home', label: 'Inicio' },
-    { id: 'about', label: 'Quién Soy' },
-    { id: 'projects', label: 'Proyectos' },
-    { id: 'contact', label: 'Contáctame' }
+    { id: 'home', label: 'Home' },
+    { id: 'about', label: 'About me' },
+    { id: 'projects', label: 'Projects' },
+    { id: 'contact', label: 'Contact me' }
   ]
 
   const scrollToSection = (sectionId: string) => {
@@ -28,31 +30,26 @@ export default function FuturisticPortfolio() {
   }
 
   const handleContactSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  
-  const form = e.currentTarget as HTMLFormElement;
-  const formData = new FormData(form);
+    e.preventDefault()
+    setSubmitStatus('sending')
+    const form = e.currentTarget as HTMLFormElement
+    const formData = new FormData(form)
+    const name = formData.get('name') as string
+    const email = formData.get('email') as string
+    const message = formData.get('message') as string
 
-  const name = formData.get('name') as string;
-  const email = formData.get('email') as string;
-  const message = formData.get('message') as string;
-
-  try {
-    const { error } = await supabase
-      .from('contact_messages')
-      .insert({ name, email, message });
-
-    if (error) {
-      throw error;
+    try {
+      const { error } = await supabase
+        .from('contact_messages')
+        .insert({ name, email, message })
+      if (error) throw error
+      setSubmitStatus('success')
+      form.reset()
+    } catch (error) {
+      console.error('Error:', error)
+      setSubmitStatus('error')
     }
-
-    alert('¡Mensaje enviado con éxito!');
-    form.reset(); // Limpia el formulario
-  } catch (error) {
-    console.error('Error al enviar el mensaje:', error);
-    alert('Hubo un error al enviar tu mensaje. Por favor, inténtalo de nuevo.');
   }
-};
 
   return (
     <div className={styles.container}>
@@ -64,10 +61,10 @@ export default function FuturisticPortfolio() {
           className={styles.noiseBg}
           animate={{ x: [0, 100, 0], y: [0, 50, 0] }}
           transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-        ></motion.div>
+        />
       </div>
 
-      {/* Barra de navegación futurista */}
+      {/* Barra de navegación */}
       <nav className={styles.nav}>
         <ul className={styles.navList}>
           {sections.map((section) => (
@@ -94,7 +91,7 @@ export default function FuturisticPortfolio() {
 
       {/* Contenido principal */}
       <div className="relative z-10 container mx-auto px-4 md:px-8">
-        {/* Sección Hero */}
+        {/* Hero */}
         <section id="home" className={styles.hero}>
           <div className={styles.heroContent}>
             <motion.h1 
@@ -103,19 +100,18 @@ export default function FuturisticPortfolio() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
             >
-              Hola, a Todos<br />Yo soy <span className={styles.glowText}>Carlos Mario Franco</span>
+              Hello everyone,<br />
+              I'm <span className={styles.glowText}>Carlos Mario Franco</span>
             </motion.h1>
-            
             <motion.h2
               className={styles.heroSubtitle}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
-              Un <span className="text-blue-400">Desarrollador Web</span> Que Ayuda<br />
-              startups <span className={`underline ${styles.hoverGlow}`}>A lanzarse y crecer</span>
+              Software <span className="text-blue-400">Analyst & Developer</span> Building scalable<br />
+              Solutions <span className={`underline ${styles.hoverGlow}`}>For ambitious startups</span>
             </motion.h2>
-            
             <motion.div
               className={styles.heroButtons}
               initial={{ opacity: 0, y: 20 }}
@@ -126,17 +122,16 @@ export default function FuturisticPortfolio() {
                 onClick={() => scrollToSection('contact')}
                 className={styles.primaryButton}
               >
-                Contactame <FiArrowRight className="ml-2 transition-transform group-hover:translate-x-1" />
+                Contact me <FiArrowRight className="ml-2 transition-transform group-hover:translate-x-1" />
               </button>
               <button 
                 onClick={() => scrollToSection('projects')}
                 className={styles.secondaryButton}
               >
-                Ver Proyectos
+                See Projects
               </button>
             </motion.div>
           </div>
-
           <motion.div
             className={styles.heroImageContainer}
             initial={{ opacity: 0, scale: 0.9 }}
@@ -165,7 +160,7 @@ export default function FuturisticPortfolio() {
           id="content"
         >
           <div className="max-w-6xl mx-auto">
-            {/* Sección Home */}
+            {/* Home */}
             {activeSection === 'home' && (
               <motion.div
                 initial={{ opacity: 0 }}
@@ -197,7 +192,7 @@ export default function FuturisticPortfolio() {
               </motion.div>
             )}
 
-            {/* Sección About */}
+            {/* About */}
             {activeSection === 'about' && (
               <motion.div
                 initial={{ opacity: 0 }}
@@ -205,36 +200,39 @@ export default function FuturisticPortfolio() {
                 transition={{ duration: 0.5 }}
                 className="space-y-8"
               >
-                <h3 className={styles.sectionTitle}>Quién Soy</h3>
+                <h3 className={styles.sectionTitle}>About Me</h3>
                 <div className="grid md:grid-cols-2 gap-8">
                   <div className="space-y-6">
                     <p className="text-gray-300 leading-relaxed">
-                      Soy un profesional apasionado por la tecnología con más de 10 años de experiencia combinada en desarrollo de software, logística y gestión de proyectos. Mi enfoque multidisciplinario me permite abordar problemas desde diferentes perspectivas y encontrar soluciones innovadoras.
+                      As a seasoned Software Analyst and Developer with over a decade of experience, I specialize in crafting technology solutions that bridge business needs with technical execution. My career spans software development, systems analysis, and process optimization, where I've consistently delivered systems that enhance operational workflows and drive measurable business impact.
                     </p>
                     <p className="text-gray-300 leading-relaxed">
-                      Como Frontend Engineer, me especializo en crear experiencias digitales excepcionales que combinan diseño atractivo con funcionalidad robusta. Mi objetivo es desarrollar productos que no solo cumplan con los requisitos técnicos, sino que también generen un impacto positivo en los usuarios.
+                      What sets me apart is my ability to analyze complex requirements and translate them into efficient, scalable solutions. With a background that intersects software engineering and logistics, I bring a unique perspective to digital transformation projects, ensuring technical implementations align with real-world operational demands. I take pride in building systems that don't just function well but create tangible value for organizations and end-users alike.
                     </p>
                     <div className="flex space-x-6">
                       <a href="https://github.com/Mario06franco" className="text-blue-400 hover:text-blue-300 transition-colors">
                         <FiGithub size={24} />
                       </a>
-                      <a href="https://linkedin.com/in/carlos-mario-franco" className="text-blue-400 hover:text-blue-300 transition-colors">
+                      <a href="https://linkedin.com/in/carlos-mario-franco-pulgarin" className="text-blue-400 hover:text-blue-300 transition-colors">
                         <FiLinkedin size={24} />
                       </a>
-                      <a href="mailto:contacto@carlosmario.dev" className="text-blue-400 hover:text-blue-300 transition-colors">
+                      <a href="mailto:Mariofraco93@gmail.com" className="text-blue-400 hover:text-blue-300 transition-colors">
                         <FiMail size={24} />
+                      </a>
+                      <a href="https://wa.me/573127811600" className="text-blue-400 hover:text-blue-300 transition-colors">
+                        <FaWhatsapp size={24} />
                       </a>
                     </div>
                   </div>
                   <div className={styles.card}>
-                    <h4 className={`${styles.cardTitle} mb-6`}>Habilidades Técnicas</h4>
+                    <h4 className={`${styles.cardTitle} mb-6`}>Technical Skills</h4>
                     <div className="space-y-5">
                       {[
-                        { skill: 'React / Next.js', level: 90 },
-                        { skill: 'TypeScript', level: 85 },
-                        { skill: 'UI/UX Design', level: 80 },
-                        { skill: 'Node.js', level: 75 },
-                        { skill: 'Bases de Datos', level: 70 }
+                        { skill: 'React.js / Next.js / Node.js', level: 90 },
+                        { skill: 'PHP', level: 80 },
+                        { skill: 'Python', level: 75 },
+                        { skill: 'TypeScript', level: 75 },
+                        { skill: 'MongoDB', level: 70 }
                       ].map((item, index) => (
                         <div key={index}>
                           <div className="flex justify-between mb-2">
@@ -255,7 +253,7 @@ export default function FuturisticPortfolio() {
               </motion.div>
             )}
 
-            {/* Sección Projects */}
+            {/* Projects */}
             {activeSection === 'projects' && (
               <motion.div
                 initial={{ opacity: 0 }}
@@ -302,76 +300,79 @@ export default function FuturisticPortfolio() {
               </motion.div>
             )}
 
-            {/* Sección Contact */}
+            {/* Contact */}
             {activeSection === 'contact' && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5 }}
               >
-                <h3 className={styles.sectionTitle}>Contáctame</h3>
+                <h3 className={styles.sectionTitle}>Contact me</h3>
                 <div className={styles.contactGrid}>
                   <form onSubmit={handleContactSubmit} className="space-y-6">
-  <div className={styles.formGroup}>
-    <label htmlFor="name" className={styles.formLabel}>Nombre</label>
-    <input 
-      type="text" 
-      id="name" 
-      name="name" // Añade esto
-      required
-      className={styles.formInput}
-    />
-  </div>
-  <div className={styles.formGroup}>
-    <label htmlFor="email" className={styles.formLabel}>Email</label>
-    <input 
-      type="email" 
-      id="email" 
-      name="email" // Añade esto
-      required
-      className={styles.formInput}
-    />
-  </div>
-  <div className={styles.formGroup}>
-    <label htmlFor="message" className={styles.formLabel}>Mensaje</label>
-    <textarea 
-      id="message" 
-      name="message" // Añade esto
-      rows={5}
-      required
-      className={`${styles.formInput} ${styles.formTextarea}`}
-    ></textarea>
-  </div>
-  <button 
-    type="submit"
-    className={styles.submitButton}
-  >
-    Enviar Mensaje <FiArrowRight className="ml-2" />
-  </button>
-</form>
-
+                    <div className={styles.formGroup}>
+                      <label htmlFor="name" className={styles.formLabel}>Name</label>
+                      <input 
+                        type="text" 
+                        id="name" 
+                        name="name"
+                        required
+                        className={styles.formInput}
+                      />
+                    </div>
+                    <div className={styles.formGroup}>
+                      <label htmlFor="email" className={styles.formLabel}>Email</label>
+                      <input 
+                        type="email" 
+                        id="email" 
+                        name="email"
+                        required
+                        className={styles.formInput}
+                      />
+                    </div>
+                    <div className={styles.formGroup}>
+                      <label htmlFor="message" className={styles.formLabel}>Message</label>
+                      <textarea 
+                        id="message" 
+                        name="message"
+                        rows={5}
+                        required
+                        className={`${styles.formInput} ${styles.formTextarea}`}
+                      ></textarea>
+                    </div>
+                    <button 
+                      type="submit"
+                      className={styles.submitButton}
+                    >
+                      Send Message <FiArrowRight className="ml-2" />
+                    </button>
+                  </form>
                   <div className="space-y-6">
                     <div className={styles.contactInfo}>
-                      <h4 className={`${styles.cardTitle} mb-6`}>Información de Contacto</h4>
+                      <h4 className={`${styles.cardTitle} mb-6`}>Contact information</h4>
                       <div className="space-y-4">
                         <div className={styles.contactItem}>
                           <FiMail className={styles.contactIcon} />
-                          <span>contacto@carlosmario.dev</span>
+                          <span>Mariofraco93@gmail.com </span>
                         </div>
                         <div className={styles.contactItem}>
                           <FiLinkedin className={styles.contactIcon} />
-                          <a href="https://linkedin.com/in/carlos-mario-franco" className="hover:underline">linkedin.com/in/carlosmario</a>
+                          <a href="https://linkedin.com/in/carlos-mario-franco-pulgarin-004397305?" className="hover:underline">linkedin.com/in/carlosmario</a>
                         </div>
-                        <div className={styles.contactItem}>
+                        <div className={styles.contactItem}>                                                  
                           <FiGithub className={styles.contactIcon} />
-                          <a href="https://github.com/Mario06franco" className="hover:underline">github.com/carlosmario</a>
-                        </div>
+                          <a href="https://github.com/Mario06franco" className="hover:underline">github.com/Mario06franco</a>
+                        </div> 
+                        <div className={styles.contactItem}>                                                  
+                          <FaWhatsapp className={styles.contactIcon} />
+                          <a href="https://wa.me/573127811600" className="hover:underline">Whatsapp +57 312 781 1600</a>
+                        </div>  
                       </div>
                     </div>
                     <div className={styles.contactInfo}>
-                      <h4 className={`${styles.cardTitle} mb-6`}>Disponibilidad</h4>
+                      <h4 className={`${styles.cardTitle} mb-6`}>Availability</h4>
                       <p className="text-gray-300 leading-relaxed">
-                        Actualmente estoy disponible para nuevos proyectos desafiantes y oportunidades de colaboración. Si tienes un proyecto en mente o quieres discutir cómo puedo ayudar a tu equipo, no dudes en contactarme.
+                        I am currently available for challenging new projects and opportunities for collaboration. If you have a project in mind or want to discuss how I can help your team, don't hesitate to contact me.
                       </p>
                     </div>
                   </div>
@@ -381,6 +382,58 @@ export default function FuturisticPortfolio() {
           </div>
         </motion.section>
       </div>
+
+      {/* Modales de estado de envío */}
+      {submitStatus === 'success' && (
+        <div className={styles.submitStatus}>
+          <div className={styles.submitStatusContent}>
+            <div className={styles.successIcon}>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <h3>¡Mensaje enviado con éxito!</h3>
+            <p>Gracias por contactarme. Revisaré tu mensaje y me pondré en contacto contigo lo antes posible.</p>
+            <button 
+              className={styles.confirmButton}
+              onClick={() => setSubmitStatus('idle')}
+            >
+              Aceptar
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      )}
+
+      {submitStatus === 'error' && (
+        <div className={styles.submitStatus}>
+          <div className={styles.submitStatusContent}>
+            <div className={styles.successIcon} style={{ background: 'linear-gradient(135deg, #ef4444, #f97316)' }}>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </div>
+            <h3>Error al enviar</h3>
+            <p>Hubo un problema al enviar tu mensaje. Por favor, inténtalo de nuevo más tarde.</p>
+            <button 
+              className={styles.confirmButton}
+              style={{ background: 'linear-gradient(135deg, #ef4444, #f97316)' }}
+              onClick={() => setSubmitStatus('idle')}
+            >
+              Entendido
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Footer */}
+      <footer className={styles.footer}>
+        <p className={styles.footerText}>
+          Creado por Mario Franco · © {new Date().getFullYear()} Todos los derechos reservados
+        </p>
+      </footer>
     </div>
   )
 }
