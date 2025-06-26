@@ -6,6 +6,7 @@ import { FaWhatsapp } from 'react-icons/fa'
 import Image from 'next/image'
 import styles from './page.module.css'
 import { supabase } from '@/app/lib/supabaseClient'
+import emailjs from '@emailjs/browser'
 
 export default function FuturisticPortfolio() {
   const [activeSection, setActiveSection] = useState('home')
@@ -29,27 +30,40 @@ export default function FuturisticPortfolio() {
     }
   }
 
-  const handleContactSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setSubmitStatus('sending')
-    const form = e.currentTarget as HTMLFormElement
+
+const handleContactSubmit = async (e: React.FormEvent) => {
+  e.preventDefault()
+  setSubmitStatus('sending')
+  const form = e.currentTarget as HTMLFormElement
+
+  try {
+    // Enviar con EmailJS
+    await emailjs.sendForm(
+      'service_7e8v74z',    // reemplaza con tu Service ID
+      'template_grdpiai',   // reemplaza con tu Template ID
+      form,
+      'SP4NT53adNx3fqFWj'     // reemplaza con tu Public Key
+    )
+
+    // Opcional: guardar en Supabase también
     const formData = new FormData(form)
     const name = formData.get('name') as string
     const email = formData.get('email') as string
     const message = formData.get('message') as string
 
-    try {
-      const { error } = await supabase
-        .from('contact_messages')
-        .insert({ name, email, message })
-      if (error) throw error
-      setSubmitStatus('success')
-      form.reset()
-    } catch (error) {
-      console.error('Error:', error)
-      setSubmitStatus('error')
-    }
+    const { error } = await supabase
+      .from('contact_messages')
+      .insert({ name, email, message })
+    if (error) throw error
+
+    setSubmitStatus('success')
+    form.reset()
+  } catch (error) {
+    console.error('Error:', error)
+    setSubmitStatus('error')
   }
+}
+
 
   return (
     <div className={styles.container}>
